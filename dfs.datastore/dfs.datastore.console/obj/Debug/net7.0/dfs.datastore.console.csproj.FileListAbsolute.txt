@@ -1,0 +1,15 @@
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\bin\Debug\net7.0\dfs.datastore.console.exe
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\bin\Debug\net7.0\dfs.datastore.console.deps.json
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\bin\Debug\net7.0\dfs.datastore.console.runtimeconfig.json
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\bin\Debug\net7.0\dfs.datastore.console.dll
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\bin\Debug\net7.0\dfs.datastore.console.pdb
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.csproj.AssemblyReference.cache
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.AssemblyInfoInputs.cache
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.AssemblyInfo.cs
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.csproj.CoreCompileInputs.cache
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.dll
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\refint\dfs.datastore.console.dll
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.pdb
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\dfs.datastore.console.genruntimeconfig.cache
+C:\Projects\DFS\dfs.datastore\dfs.datastore.console\obj\Debug\net7.0\ref\dfs.datastore.console.dll

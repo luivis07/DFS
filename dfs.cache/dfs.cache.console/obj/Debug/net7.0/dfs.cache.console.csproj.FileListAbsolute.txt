@@ -1,0 +1,15 @@
+C:\Projects\DFS\dfs.cache\dfs.cache.console\bin\Debug\net7.0\dfs.cache.console.exe
+C:\Projects\DFS\dfs.cache\dfs.cache.console\bin\Debug\net7.0\dfs.cache.console.deps.json
+C:\Projects\DFS\dfs.cache\dfs.cache.console\bin\Debug\net7.0\dfs.cache.console.runtimeconfig.json
+C:\Projects\DFS\dfs.cache\dfs.cache.console\bin\Debug\net7.0\dfs.cache.console.dll
+C:\Projects\DFS\dfs.cache\dfs.cache.console\bin\Debug\net7.0\dfs.cache.console.pdb
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.csproj.AssemblyReference.cache
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.AssemblyInfoInputs.cache
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.AssemblyInfo.cs
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.csproj.CoreCompileInputs.cache
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.dll
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\refint\dfs.cache.console.dll
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.pdb
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\dfs.cache.console.genruntimeconfig.cache
+C:\Projects\DFS\dfs.cache\dfs.cache.console\obj\Debug\net7.0\ref\dfs.cache.console.dll
