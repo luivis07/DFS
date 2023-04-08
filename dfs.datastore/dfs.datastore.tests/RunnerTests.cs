@@ -21,10 +21,10 @@ public class RunnerTests
     }
 
     [TestMethod]
-    public void GetFileInfo_ReturnsMetadataInfo()
+    public async Task GetFileInfo_ReturnsMetadataInfo()
     {
-        var fileNamesExpected = SettingsReader.GetSettings().Server.Documents.Select(d => d.Name).ToList();
-        var actual = _runner.GetFileInfo();
+        var fileNamesExpected = (await SettingsReader.GetSettings()).Server.Documents.Select(d => d.Name).ToList();
+        var actual = await _runner.GetFileInfo();
         CollectionAssert.AreEquivalent(fileNamesExpected, actual.Select(a => a.Name).ToList());
     }
 
@@ -43,9 +43,9 @@ public class RunnerTests
     }
 
     [TestMethod]
-    public void GetFileContents_ShouldReturnContentsAsBytes()
+    public async Task GetFileContents_ShouldReturnContentsAsBytes()
     {
-        var actual = _runner.GetFileContents(REAL_FILE).ToArray();
+        var actual = (await _runner.GetFileContents(REAL_FILE)).ToArray();
         Assert.IsNotNull(actual);
         Assert.AreEqual(REAL_FILE_SIZE, actual.Length);
     }

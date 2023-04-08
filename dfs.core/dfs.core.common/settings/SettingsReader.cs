@@ -5,10 +5,10 @@ namespace dfs.core.common.settings;
 public static class SettingsReader
 {
     private static string APP_SETTINGS_PATH => @"appsettings.json";
-    public static SettingsModel GetSettings()
+    public async static Task<SettingsModel> GetSettings()
     {
         var finalLocation = Path.Combine(PathProvider.GetSolutionBasePath(), APP_SETTINGS_PATH);
-        var settingsText = File.ReadAllText(finalLocation);
+        var settingsText = await File.ReadAllTextAsync(finalLocation);
         return JsonSerializer.Deserialize<SettingsModel>(settingsText) ?? new SettingsModel();
     }
 }

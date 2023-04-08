@@ -4,16 +4,16 @@ using dfs.core.common.models;
 namespace dfs.datastore.console;
 public class Runner
 {
-    private static string BASE_PATH => PathProvider.GetDatastoreBasePath();
-    public IEnumerable<string> GetFiles()
+    private static async Task<string> BASE_PATH() => await PathProvider.GetDatastoreBasePath();
+    public async Task<IEnumerable<string>> GetFiles()
     {
-        var fileEntries = Directory.GetFiles(BASE_PATH);
+        var fileEntries = Directory.GetFiles(await BASE_PATH());
         return fileEntries;
     }
 
-    public IEnumerable<Document> GetFileInfo()
+    public async Task<IEnumerable<Document>> GetFileInfo()
     {
-        var filePaths = GetFiles();
+        var filePaths = await GetFiles();
         var result = new List<Document>();
         foreach (var path in filePaths)
         {
@@ -33,11 +33,11 @@ public class Runner
         return File.Exists(fullPath);
     }
 
-    public IEnumerable<byte> GetFileContents(string fullPath)
+    public async Task<IEnumerable<byte>> GetFileContents(string fullPath)
     {
-        if(FileExists(fullPath))
+        if (FileExists(fullPath))
         {
-            return File.ReadAllBytes(fullPath);
+            return await File.ReadAllBytesAsync(fullPath);
         }
         return Enumerable.Empty<byte>();
     }

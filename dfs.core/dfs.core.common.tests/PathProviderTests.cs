@@ -12,9 +12,9 @@ public class PathProviderTests
     }
 
     [TestMethod]
-    public void GetDatastoreBasePath_ReturnsExpectedValue()
+    public async Task GetDatastoreBasePath_ReturnsExpectedValue()
     {
-        var datastorePath = PathProvider.GetDatastoreBasePath();
+        var datastorePath = await PathProvider.GetDatastoreBasePath();
         Assert.AreEqual(@"C:\Projects\DFS\dfs.documents\datastore", datastorePath, true);
     }
 }

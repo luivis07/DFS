@@ -9,6 +9,7 @@ public class SettingsModel
 public class Datastore
 {
     public string Path { get; set; } = string.Empty;
+    public int Port { get; set; }
 }
 
 public class Server

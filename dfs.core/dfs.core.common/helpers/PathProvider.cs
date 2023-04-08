@@ -10,8 +10,9 @@ public static class PathProvider
         var relativePath = baseDirectory.Substring(0, rootFolder);
         return Path.Combine(relativePath, SOLUTION_BASE_DIRECTORY);
     }
-    public static string GetDatastoreBasePath()
+    public static async Task<string> GetDatastoreBasePath()
     {
-        return Path.Combine(GetSolutionBasePath(), SettingsReader.GetSettings().Datastore.Path);
+        var settings = await SettingsReader.GetSettings();
+        return Path.Combine(GetSolutionBasePath(), settings.Datastore.Path);
     }
 }

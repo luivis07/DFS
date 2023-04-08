@@ -5,9 +5,9 @@ namespace dfs.core.common.tests;
 public class SettingsReaderTests
 {
     [TestMethod]
-    public void GetSettings_Matches_File()
+    public async Task GetSettings_Matches_File()
     {
-        var settings = SettingsReader.GetSettings();
+        var settings = await SettingsReader.GetSettings();
         Assert.IsNotNull(settings);
         Assert.IsNotNull(settings.Datastore);
         Assert.IsNotNull(settings.Cache);
