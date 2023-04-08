@@ -27,4 +27,18 @@ public class Runner
         }
         return result;
     }
+
+    public bool FileExists(string fullPath)
+    {
+        return File.Exists(fullPath);
+    }
+
+    public IEnumerable<byte> GetFileContents(string fullPath)
+    {
+        if(FileExists(fullPath))
+        {
+            return File.ReadAllBytes(fullPath);
+        }
+        return Enumerable.Empty<byte>();
+    }
 }
