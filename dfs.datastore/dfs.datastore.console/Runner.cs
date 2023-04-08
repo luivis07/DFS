@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using dfs.core.common.helpers;
 using dfs.core.common.models;
 
@@ -40,5 +43,25 @@ public class Runner
             return await File.ReadAllBytesAsync(fullPath);
         }
         return Enumerable.Empty<byte>();
+    }
+
+    public async Task Begin()
+    {
+        var ipHostInfo = await Dns.GetHostEntryAsync("localhost");
+        var ipAddress = ipHostInfo.AddressList[0];
+
+        var ipEndPoint = new IPEndPoint(ipAddress, 11_000);
+
+        using var listener = new Socket(
+            ipEndPoint.AddressFamily,
+            SocketType.Stream,
+            ProtocolType.Tcp);
+
+        listener.Bind(ipEndPoint);
+        listener.Listen(100);
+
+        var handler = await listener.AcceptAsync();
+        var fileContent = (await GetFileContents(@"C:\Projects\DFS\dfs.documents\datastore\A.txt")).ToArray();
+        await handler.SendAsync(fileContent, SocketFlags.None);
     }
 }
