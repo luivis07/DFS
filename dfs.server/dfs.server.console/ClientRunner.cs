@@ -1,4 +1,6 @@
 using System.Net;
+using System.Text.Json;
+using dfs.core.common.models;
 using dfs.core.common.settings;
 
 namespace dfs.server.console;
@@ -16,35 +18,33 @@ public class ClientRunner
     }
     public void Begin()
     {
-            Console.Write("Client connecting...");
-            _client.ConnectAsync();
-            Console.WriteLine("Done!");
+        Console.Write("Client connecting...");
+        _client.ConnectAsync();
+        Console.WriteLine("Done!");
 
-            Console.WriteLine("Press Enter to stop the client or '!' to reconnect the client...");
+        while (_client._sessionId == Guid.Empty)
+        {
+            
+        }
+        Init();
+        while (true)
+        {
+            string line = Console.ReadLine() ?? "none";
+            if (string.IsNullOrEmpty(line))
+                break;
+        }
+        Console.Write("Client disconnecting...");
+        _client.DisconnectAndStop();
+        Console.WriteLine("Done!");
+    }
 
-            // Perform text input
-            for (;;)
-            {
-                string line = Console.ReadLine() ?? "none";
-                if (string.IsNullOrEmpty(line))
-                    break;
-
-                // Disconnect the client
-                if (line == "!")
-                {
-                    Console.Write("Client disconnecting...");
-                    _client.DisconnectAsync();
-                    Console.WriteLine("Done!");
-                    continue;
-                }
-
-                // Send the entered text to the chat server
-                _client.SendAsync(line);
-            }
-
-            // Disconnect the client
-            Console.Write("Client disconnecting...");
-            _client.DisconnectAndStop();
-            Console.WriteLine("Done!");
+    public void Init()
+    {
+        var baseMessage = new BaseMessage
+        {
+            SessionId = _client._sessionId,
+            MessageType = MessageType.GET_ALL_FILEINFO
+        };
+        _client.SendAsync(baseMessage.AsJson());
     }
 }

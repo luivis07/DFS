@@ -11,6 +11,6 @@ public class DocumentServer : TcpServer
     }
     protected override TcpSession CreateSession()
     {
-        return new CommSession(this);
+        return new DocumentServerSession(this);
     }
 }
