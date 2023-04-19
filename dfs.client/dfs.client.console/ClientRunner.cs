@@ -20,14 +20,20 @@ public class ClientRunner
         Console.Write("Client connecting...");
         _client.ConnectAsync();
         Console.WriteLine("Done!");
+        Console.WriteLine("Starting Session...");
+        while (_client._sessionId == Guid.Empty)
+        {
 
+        }
+        Console.WriteLine($"Session established {_client._sessionId}");
+        _client.GetDocuments();
         while (true)
         {
             string line = Console.ReadLine() ?? "none";
             if (string.IsNullOrEmpty(line))
                 break;
         }
-        
+
         Console.Write("Client disconnecting...");
         _client.DisconnectAndStop();
         Console.WriteLine("Done!");

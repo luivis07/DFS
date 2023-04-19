@@ -11,8 +11,7 @@ public class ServerRunner
     public ServerRunner()
     {
         _server = SettingsReader.GetSettings().Server;
-        _documentServer = new DocumentServer(IPAddress.Any,
-        _server.Port);
+        _documentServer = new DocumentServer(IPAddress.Any, _server.Port);
     }
     public void Begin()
     {

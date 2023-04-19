@@ -15,5 +15,14 @@ public class DocumentServerSession : BaseSession
 
     protected override void OnReceived(BaseMessage baseMessage)
     {
+        if (baseMessage.MessageType == MessageType.GET_ALL_FILEINFO)
+        {
+            var session = _server.FindSession(baseMessage.SessionId);
+            var getAllFileInfoMessage = new GetAllFileInfoMessage
+            {
+                Documents = ServerStorage.GetDocuments()
+            };
+            session?.SendAsync(baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson());
+        }
     }
 }

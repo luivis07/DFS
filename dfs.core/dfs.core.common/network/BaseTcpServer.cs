@@ -23,6 +23,7 @@ public abstract class BaseTcpServer : TcpServer
         };
         var message = JsonSerializer.Serialize(baseMessage);
         session.SendAsync(message);
+        Console.WriteLine($"Client {session.Id} connected");
         base.OnConnected(session);
     }
 }

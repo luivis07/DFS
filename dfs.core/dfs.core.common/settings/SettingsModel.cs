@@ -30,6 +30,7 @@ public class DocumentSettings
 {
     public string Name { get; set; } = string.Empty;
     public int Cost { get; set; }
+    public int Quantity { get; set; }
 }
 
 public class CacheSettings

@@ -20,7 +20,7 @@ public class DatastoreSession : BaseSession
             var session = _server.FindSession(baseMessage.SessionId);
             var getAllFileInfoMessage = new GetAllFileInfoMessage
             {
-                Documents = _server.GetFileInfo().ToList()
+                Documents = _server.GetFileInfo()
             };
             session?.SendAsync(baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson());
         }
