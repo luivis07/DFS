@@ -21,10 +21,10 @@ public class RunnerTests
     }
 
     [TestMethod]
-    public async Task GetFileInfo_ReturnsMetadataInfo()
+    public void GetFileInfo_ReturnsMetadataInfo()
     {
-        var fileNamesExpected = (await SettingsReader.GetSettings()).Server.Documents.Select(d => d.Name).ToList();
-        var actual = await _runner.GetFileInfo();
+        var fileNamesExpected = SettingsReader.GetSettings().Server.Documents.Select(d => d.Name).ToList();
+        var actual = _runner.GetFileInfo();
         CollectionAssert.AreEquivalent(fileNamesExpected, actual.Select(a => a.Name).ToList());
     }
 

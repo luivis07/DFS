@@ -1,29 +1,31 @@
 namespace dfs.core.common.settings;
 public class SettingsModel
 {
-    public Datastore Datastore { get; set; } = new Datastore();
-    public Server Server { get; set; } = new Server();
-    public Cache Cache { get; set; } = new Cache();
+    public DatastoreSettings Datastore { get; set; } = new DatastoreSettings();
+    public ServerSettings Server { get; set; } = new ServerSettings();
+    public CacheSettings Cache { get; set; } = new CacheSettings();
 }
 
-public class Datastore
+public class DatastoreSettings
 {
     public string Path { get; set; } = string.Empty;
-    public int Port { get; set; }
+    public int Port { get; set; } = 1111;
 }
 
-public class Server
+public class ServerSettings
 {
-    public IEnumerable<Documents> Documents { get; set; } = Enumerable.Empty<Documents>();
+    public IEnumerable<DocumentSettings> Documents { get; set; } = Enumerable.Empty<DocumentSettings>();
+    public string IPAddress { get; set; } = "127.0.0.1";
+    public int Port { get; set; } = 1111;
 }
 
-public class Documents
+public class DocumentSettings
 {
     public string Name { get; set; } = string.Empty;
     public int Cost { get; set; }
 }
 
-public class Cache
+public class CacheSettings
 {
     public int Size { get; set; } = 1000;
     public string Path { get; set; } = string.Empty;

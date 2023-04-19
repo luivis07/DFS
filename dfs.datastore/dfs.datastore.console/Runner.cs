@@ -3,20 +3,28 @@ using System.Net.Sockets;
 using System.Text;
 using dfs.core.common.helpers;
 using dfs.core.common.models;
+using dfs.core.common.settings;
 
 namespace dfs.datastore.console;
 public class Runner
 {
-    private static async Task<string> BASE_PATH() => await PathProvider.GetDatastoreBasePath();
-    public async Task<IEnumerable<string>> GetFiles()
+    private readonly DatastoreSettings _datastore;
+    private readonly DatastoreServer _datastoreServer;
+    public Runner()
     {
-        var fileEntries = Directory.GetFiles(await BASE_PATH());
+        _datastore = SettingsReader.GetSettings().Datastore;
+        _datastoreServer = new DatastoreServer(IPAddress.Any, _datastore.Port);
+    }
+    private static string BASE_PATH() => PathProvider.GetDatastoreBasePath();
+    public IEnumerable<string> GetFiles()
+    {
+        var fileEntries = Directory.GetFiles(BASE_PATH());
         return fileEntries;
     }
 
-    public async Task<IEnumerable<Document>> GetFileInfo()
+    public IEnumerable<Document> GetFileInfo()
     {
-        var filePaths = await GetFiles();
+        var filePaths = GetFiles();
         var result = new List<Document>();
         foreach (var path in filePaths)
         {
@@ -45,23 +53,40 @@ public class Runner
         return Enumerable.Empty<byte>();
     }
 
-    public async Task Begin()
+    public void Begin()
     {
-        var ipHostInfo = await Dns.GetHostEntryAsync("localhost");
-        var ipAddress = ipHostInfo.AddressList[0];
+        Console.Write("Server starting...");
+        
+        _datastoreServer.Start();
 
-        var ipEndPoint = new IPEndPoint(ipAddress, 11_000);
+        Console.WriteLine("Done!");
 
-        using var listener = new Socket(
-            ipEndPoint.AddressFamily,
-            SocketType.Stream,
-            ProtocolType.Tcp);
+        Console.WriteLine("Press Enter to stop the server or '!' to restart the server...");
 
-        listener.Bind(ipEndPoint);
-        listener.Listen(100);
+        // Perform text input
+        for (; ; )
+        {
+            string line = Console.ReadLine() ?? "none";
+            if (string.IsNullOrEmpty(line))
+                break;
 
-        var handler = await listener.AcceptAsync();
-        var fileContent = (await GetFileContents(@"C:\Projects\DFS\dfs.documents\datastore\A.txt")).ToArray();
-        await handler.SendAsync(fileContent, SocketFlags.None);
+            // Restart the server
+            if (line == "!")
+            {
+                Console.Write("Server restarting...");
+                _datastoreServer.Restart();
+                Console.WriteLine("Done!");
+                continue;
+            }
+
+            // Multicast admin message to all sessions
+            line = "(admin) " + line;
+            _datastoreServer.Multicast(line);
+        }
+
+        // Stop the server
+        Console.Write("Server stopping...");
+        _datastoreServer.Stop();
+        Console.WriteLine("Done!");
     }
 }

@@ -4,6 +4,10 @@
     <ProjectReference Include="..\..\dfs.core\dfs.core.common\dfs.core.common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NetCoreServer" Version="7.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
