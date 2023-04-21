@@ -40,11 +40,11 @@ public class DatastoreServer : BaseTcpServer
         return File.Exists(fullPath);
     }
 
-    public async Task<IEnumerable<byte>> GetFileContents(string fullPath)
+    public IEnumerable<byte> GetFileContents(string fullPath)
     {
         if (FileExists(fullPath))
         {
-            return await File.ReadAllBytesAsync(fullPath);
+            return File.ReadAllBytes(fullPath);
         }
         return Enumerable.Empty<byte>();
     }

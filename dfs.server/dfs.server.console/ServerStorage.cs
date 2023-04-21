@@ -36,4 +36,13 @@ public static class ServerStorage
         }
         Documents = documents;
     }
+
+    public static byte[] GetDocumentContent(string? fullPath)
+    {
+        if (string.IsNullOrEmpty(fullPath))
+            return new byte[0];
+
+        var content = _datastoreServer.GetFileContents(fullPath);
+        return content.ToArray();
+    }
 }

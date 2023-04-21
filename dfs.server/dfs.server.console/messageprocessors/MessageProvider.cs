@@ -10,7 +10,8 @@ public class MessageProvider
     {
         _messageProcessors = new List<IMessageProcessor>
         {
-            new GetAllFileInfoServerProcessor()
+            new GetAllFileInfoServerProcessor(),
+            new GetFileServerProcessor()
         };
     }
     public IMessageProcessor? GetMessageProcessor(BaseMessage baseMessage, Type sender)

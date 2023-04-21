@@ -46,9 +46,9 @@ public class DatastoreServerTests
     }
 
     [TestMethod]
-    public async Task GetFileContents_ShouldReturnContentsAsBytes()
+    public void GetFileContents_ShouldReturnContentsAsBytes()
     {
-        var actual = (await _datastoreServer.GetFileContents(REAL_FILE)).ToArray();
+        var actual = _datastoreServer.GetFileContents(REAL_FILE).ToArray();
         Assert.IsNotNull(actual);
         Assert.AreEqual(REAL_FILE_SIZE, actual.Length);
     }
