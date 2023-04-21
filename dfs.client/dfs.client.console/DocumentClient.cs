@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using dfs.client.console.messageprocessors;
+using dfs.core.common.dispatcher;
 using dfs.core.common.models;
 using dfs.core.common.network;
 
@@ -7,34 +9,30 @@ namespace dfs.client.console;
 
 public class DocumentClient : BaseTcpClient
 {
-    public DocumentClient(IPAddress address, int port) : base(address, port)
+    private readonly MessageProvider _messageProvider;
+
+    public DocumentClient(IPAddress address, int port, MessageProvider messageProvider) : base(address, port)
     {
+        _messageProvider = messageProvider;
     }
 
     protected override void OnReceived(BaseMessage baseMessage)
     {
-        if (baseMessage.MessageType == MessageType.GET_ALL_FILEINFO)
+        var messageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentClient));
+        var result = messageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
+        if (result == ProcessMessageStatus.Processed)
         {
-            var message = JsonSerializer.Deserialize<GetAllFileInfoMessage>(baseMessage.Payload);
-            if (message != null)
-            {
-                var selection = ClientUI.DisplayDocuments(message.Documents);
-                if (selection != null)
-                {
-                    var fileMessage = new GetFileMessage
-                    {
-                        Document = selection
-                    };
-                    Console.WriteLine($"Requested {selection.Name}");
-                    SendAsync(baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson());
-                    Console.WriteLine($"Sent request for {baseMessage.SessionId}");
-                }
-                else
-                {
-                    End();
-                }
-            }
+            var followUpMessage = messageProcessor?.FollowUpMessage();
+            if (!string.IsNullOrWhiteSpace(followUpMessage))
+                SendAsync(followUpMessage);
+        }
+        else if (result == ProcessMessageStatus.Error)
+        {
             GetDocuments();
+        }
+        else
+        {
+            End();
         }
     }
     public void GetDocuments()
