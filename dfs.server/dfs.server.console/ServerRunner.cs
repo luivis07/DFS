@@ -19,7 +19,7 @@ public class ServerRunner
         _documentServer.Start();
         Console.WriteLine("Done!");
 
-        while (true)
+        while (_documentServer.IsStarted)
         {
             string line = Console.ReadLine() ?? "none";
             if (string.IsNullOrEmpty(line))
