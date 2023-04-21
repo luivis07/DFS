@@ -7,7 +7,7 @@ public class ClientRunner
 {
     private readonly ClientSettings _clientSettings;
     private readonly DocumentClient _client;
-
+    public static bool run = true;
     public ClientRunner()
     {
         _clientSettings = SettingsReader.GetSettings().Client;
@@ -23,19 +23,11 @@ public class ClientRunner
         Console.WriteLine("Starting Session...");
         while (_client._sessionId == Guid.Empty)
         {
-
         }
         Console.WriteLine($"Session established {_client._sessionId}");
         _client.GetDocuments();
-        while (true)
+        while (_client.IsConnected)
         {
-            string line = Console.ReadLine() ?? "none";
-            if (string.IsNullOrEmpty(line))
-                break;
         }
-
-        Console.Write("Client disconnecting...");
-        _client.DisconnectAndStop();
-        Console.WriteLine("Done!");
     }
 }

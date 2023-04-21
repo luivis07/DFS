@@ -18,8 +18,23 @@ public class DocumentClient : BaseTcpClient
             var message = JsonSerializer.Deserialize<GetAllFileInfoMessage>(baseMessage.Payload);
             if (message != null)
             {
-                ClientUI.DisplayDocuments(message.Documents);
+                var selection = ClientUI.DisplayDocuments(message.Documents);
+                if (selection != null)
+                {
+                    var fileMessage = new GetFileMessage
+                    {
+                        Document = selection
+                    };
+                    Console.WriteLine($"Requested {selection.Name}");
+                    SendAsync(baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson());
+                    Console.WriteLine($"Sent request for {baseMessage.SessionId}");
+                }
+                else
+                {
+                    End();
+                }
             }
+            GetDocuments();
         }
     }
     public void GetDocuments()
@@ -30,5 +45,11 @@ public class DocumentClient : BaseTcpClient
             MessageType = MessageType.GET_ALL_FILEINFO
         };
         SendAsync(baseMessage.AsJson());
+    }
+    public void End()
+    {
+        Console.Write("Client disconnecting...");
+        DisconnectAndStop();
+        Console.WriteLine("Done!");
     }
 }

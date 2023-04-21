@@ -8,12 +8,12 @@ public class BaseMessage
     public Guid SessionId { get; set; }
     public string Payload { get; set; } = string.Empty;
 
-    public BaseMessage Reply(string payload)
+    public BaseMessage Reply(string payload, string messageType = "")
     {
         return new BaseMessage
         {
             SessionId = this.SessionId,
-            MessageType = this.MessageType,
+            MessageType = string.IsNullOrWhiteSpace(messageType) ? this.MessageType : messageType,
             Payload = payload
         };
     }
