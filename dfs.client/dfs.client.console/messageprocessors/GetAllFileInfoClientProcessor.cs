@@ -25,9 +25,9 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
                 {
                     Document = selection
                 };
-                Console.WriteLine($"Requested {selection.Name}");
+                Console.WriteLine($"({baseMessage.SessionId}): requested {selection.Name}");
                 _followUpMessage = baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson();
-                Console.WriteLine($"Sent request for {baseMessage.SessionId}");
+                Console.WriteLine($"({baseMessage.SessionId}): request sent");
                 return ProcessMessageStatus.Processed;
             }
             else

@@ -23,11 +23,11 @@ public class GetFileServerProcessor : IMessageProcessor
         var message = JsonSerializer.Deserialize<GetFileMessage>(baseMessage.Payload);
         if (message != null)
         {
-            Console.WriteLine($"Received {baseMessage.SessionId} - {message.Document?.Name}");
+            Console.WriteLine($"({baseMessage.SessionId}): received request for {message.Document?.Name}");
             var contents = ServerStorage.GetDocumentContent(message.Document?.FullPath);
             var reply = message.Reply(contents);
             _followUpMessage = baseMessage.Reply(reply.AsJson()).AsJson();
-            Console.WriteLine($"Sent {contents.Length} bytes");
+            Console.WriteLine($"({baseMessage.SessionId}): sent {contents.Length} bytes");
             return ProcessMessageStatus.Processed;
         }
         return ProcessMessageStatus.Error;
