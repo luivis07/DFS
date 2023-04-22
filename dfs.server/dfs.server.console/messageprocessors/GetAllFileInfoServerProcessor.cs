@@ -19,9 +19,18 @@ public class GetAllFileInfoServerProcessor : IMessageProcessor
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
     {
         _followUpMessage = new FollowUpMessage();
+        var documents = ServerStorage.GetDocuments();
+        var result = new List<Document>();
+        foreach (var document in documents)
+        {
+            if (CacheStorage.Exists(document.Name))
+                result.Add(document.Copy(document.Cost / 2));
+            else
+                result.Add(document.Copy());
+        }
         var getAllFileInfoMessage = new GetAllFileInfoMessage
         {
-            Documents = ServerStorage.GetDocuments()
+            Documents = documents
         };
         _followUpMessage.FollowUpText = baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson();
         return ProcessMessageStatus.Processed;

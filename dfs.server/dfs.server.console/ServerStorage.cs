@@ -21,7 +21,7 @@ public static class ServerStorage
         if (getAllFileInfoMessage != null)
             Documents = getAllFileInfoMessage.Documents.Select(d => d).ToList();
     }
-    public static IEnumerable<Document> GetDocuments() => Documents;
+    public static IEnumerable<Document> GetDocuments() => Documents.Select(d => d).ToList();
     public static void Init()
     {
         var documents = _datastoreServer.GetFileInfo();
