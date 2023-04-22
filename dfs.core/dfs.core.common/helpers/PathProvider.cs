@@ -15,4 +15,11 @@ public static class PathProvider
         var settings = SettingsReader.GetSettings();
         return Path.Combine(GetSolutionBasePath(), settings.Datastore.Path);
     }
+    public static string GetClientBasePath(string clientSpecific = "")
+    {
+        var settings = SettingsReader.GetSettings();
+        return clientSpecific == string.Empty ?
+            Path.Combine(GetSolutionBasePath(), settings.Client.Path) :
+            Path.Combine(GetSolutionBasePath(), settings.Client.Path, clientSpecific);
+    }
 }

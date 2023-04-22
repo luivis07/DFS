@@ -19,14 +19,29 @@ public class DocumentServerSession : BaseSession
 
     protected override void OnReceived(BaseMessage baseMessage)
     {
-        var messageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentServerSession));
-        var result = messageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
         var session = _server.FindSession(baseMessage.SessionId);
-        if (result == ProcessMessageStatus.Processed)
+        var result = ProcessMessageStatus.Error;
+        if (session != null)
         {
-            var followUpMessage = messageProcessor?.FollowUpMessage();
-            if (!string.IsNullOrWhiteSpace(followUpMessage))
-                SendAsync(followUpMessage);
+            var messageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentServerSession));
+            result = messageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
+
+            if (result == ProcessMessageStatus.Processed)
+            {
+                var followUpMessage = messageProcessor?.FollowUpMessage();
+                if (followUpMessage != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(followUpMessage.FollowUpText))
+                        session.SendAsync(followUpMessage.FollowUpText);
+                    if (followUpMessage.FollowUpContent != null && followUpMessage.FollowUpContent.Length > 0)
+                        session.SendAsync(followUpMessage.FollowUpContent);
+                    Console.WriteLine($"({baseMessage.SessionId}): processed - {baseMessage.MessageType}");
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"({Guid.Empty}): error - session not found");
         }
         if (result == ProcessMessageStatus.Stop)
         {

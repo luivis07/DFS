@@ -10,7 +10,7 @@ namespace dfs.client.console;
 public class DocumentClient : BaseTcpClient
 {
     private readonly MessageProvider _messageProvider;
-
+    private IMessageProcessor? _currentMessageProcessor;
     public DocumentClient(IPAddress address, int port, MessageProvider messageProvider) : base(address, port)
     {
         _messageProvider = messageProvider;
@@ -18,21 +18,32 @@ public class DocumentClient : BaseTcpClient
 
     protected override void OnReceived(BaseMessage baseMessage)
     {
-        var messageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentClient));
-        var result = messageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
+        _currentMessageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentClient));
+        var result = _currentMessageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
         if (result == ProcessMessageStatus.Processed)
         {
-            var followUpMessage = messageProcessor?.FollowUpMessage();
-            if (!string.IsNullOrWhiteSpace(followUpMessage))
-                SendAsync(followUpMessage);
+            var followUpMessage = _currentMessageProcessor?.FollowUpMessage();
+            if (followUpMessage != null)
+            {
+                SendAsync(followUpMessage.FollowUpText);
+                Console.WriteLine($"({baseMessage.SessionId}): processed - {baseMessage.MessageType}");
+            }
         }
         else if (result == ProcessMessageStatus.Error)
         {
             GetDocuments();
         }
-        else
+        else if(result == ProcessMessageStatus.Stop)
         {
             End();
+        }
+    }
+    protected override void OnReceived(byte[] buffer)
+    {
+        var result = _currentMessageProcessor?.ProcessMessage(buffer);
+        if (result == ProcessMessageStatus.Processed)
+        {
+            GetDocuments();
         }
     }
     public void GetDocuments()

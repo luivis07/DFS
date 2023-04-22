@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using dfs.core.common.helpers;
 using dfs.core.common.models;
 using NetCoreServer;
 
@@ -17,16 +18,29 @@ public abstract class BaseTcpClient : TcpClient
     protected override void OnReceived(byte[] buffer, long offset, long size)
     {
         var message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-        var baseMessage = JsonSerializer.Deserialize<BaseMessage>(message);
-        if (baseMessage != null)
+        if (message.IsJson())
         {
-            _sessionId = baseMessage.SessionId;
-            OnReceived(baseMessage);
+            var baseMessage = JsonSerializer.Deserialize<BaseMessage>(message);
+            if (baseMessage != null)
+            {
+                _sessionId = baseMessage.SessionId;
+                OnReceived(baseMessage);
+            }
+        }
+        else
+        {
+            byte[] bytes = new byte[size];
+            System.Buffer.BlockCopy(buffer, 0, bytes, 0, (int)size);
+            OnReceived(bytes);
         }
         base.OnReceived(buffer, offset, size);
     }
 
     protected abstract void OnReceived(BaseMessage baseMessage);
+    protected virtual void OnReceived(byte[] buffer)
+    {
+
+    }
 
 
     public void DisconnectAndStop()

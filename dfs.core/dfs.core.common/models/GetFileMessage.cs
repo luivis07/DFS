@@ -5,12 +5,11 @@ namespace dfs.core.common.models;
 public class GetFileMessage
 {
     public Document? Document { get; set; }
-    public byte[]? Contents { get; set; }
     public string AsJson()
     {
         return JsonSerializer.Serialize(this);
     }
-    public GetFileMessage Reply(byte[] contents)
+    public GetFileMessage Reply()
     {
         return new GetFileMessage
         {
@@ -22,8 +21,7 @@ public class GetFileMessage
                 QuantityAvailable = this.Document.QuantityAvailable,
                 Size = this.Document.Size,
                 FullPath = this.Document.FullPath
-            },
-            Contents = contents
+            }
         };
     }
 }

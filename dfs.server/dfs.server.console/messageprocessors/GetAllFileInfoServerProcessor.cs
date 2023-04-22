@@ -11,9 +11,9 @@ public class GetAllFileInfoServerProcessor : IMessageProcessor
             sender == typeof(DocumentServerSession);
     }
 
-    public string? FollowUpMessage()
+    public FollowUpMessage FollowUpMessage()
     {
-        return _followUpMessage;
+        return new FollowUpMessage { FollowUpText = _followUpMessage };
     }
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
@@ -23,6 +23,11 @@ public class GetAllFileInfoServerProcessor : IMessageProcessor
             Documents = ServerStorage.GetDocuments()
         };
         _followUpMessage = baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson();
+        return ProcessMessageStatus.Processed;
+    }
+
+    public ProcessMessageStatus ProcessMessage(byte[] buffer)
+    {
         return ProcessMessageStatus.Processed;
     }
 }

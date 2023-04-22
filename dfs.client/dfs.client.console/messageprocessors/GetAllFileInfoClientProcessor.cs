@@ -38,8 +38,13 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
         return ProcessMessageStatus.Error;
     }
 
-    public string? FollowUpMessage()
+    public FollowUpMessage FollowUpMessage()
     {
-        return _followUpMessage;
+        return new FollowUpMessage { FollowUpText = _followUpMessage };
+    }
+
+    public ProcessMessageStatus ProcessMessage(byte[] buffer)
+    {
+        return ProcessMessageStatus.Processed;
     }
 }

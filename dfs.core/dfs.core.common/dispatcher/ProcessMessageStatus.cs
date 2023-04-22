@@ -4,5 +4,6 @@ public enum ProcessMessageStatus
 {
     Processed = 0,
     Error,
-    Stop
+    Stop,
+    Processing
 }

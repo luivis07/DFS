@@ -11,6 +11,7 @@ public class ClientSettings
 {
     public int Port { get; set; } = 1111;
     public string IPAddress { get; set; } = "127.0.0.1";
+    public string Path { get; set; } = string.Empty;
 }
 
 public class DatastoreSettings

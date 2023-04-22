@@ -27,7 +27,6 @@ public class ClientRunner
         {
         }
         Console.WriteLine($"({_client._sessionId}): session established");
-        _client.GetDocuments();
         while (_client.IsConnected)
         {
         }
