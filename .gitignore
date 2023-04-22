@@ -478,3 +478,4 @@ $RECYCLE.BIN/
 
 #custom
 dfs.documents/clients*
+dfs.documents/cache*
