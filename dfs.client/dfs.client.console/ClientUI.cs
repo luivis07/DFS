@@ -13,7 +13,6 @@ public static class ClientUI
         }
         Console.Write("Select (by name): ");
         var choice = Console.ReadLine();
-        //var choice = "A";
         var selection = documents.FirstOrDefault(f => string.Equals(f.Name, choice, StringComparison.OrdinalIgnoreCase));
         return selection;
     }

@@ -45,4 +45,18 @@ public static class ServerStorage
         var content = _datastoreServer.GetFileContents(fullPath);
         return content.ToList();
     }
+
+    public static void DecreaseQuantity(string name)
+    {
+        var doc = Documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
+        if (doc != null)
+            doc.Cost--;
+    }
+    public static bool IsAvailable(string name)
+    {
+        var doc = Documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
+        if (doc == null)
+            return false;
+        return doc.QuantityAvailable > 0;
+    }
 }

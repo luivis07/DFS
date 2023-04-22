@@ -21,14 +21,28 @@ public class GetFileServerProcessor : IMessageProcessor
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
     {
+        _followUpMessage = new FollowUpMessage();
         var message = JsonSerializer.Deserialize<GetFileMessage>(baseMessage.Payload);
         if (message != null)
         {
             Console.WriteLine($"({baseMessage.SessionId}): received request for {message.Document?.Name}");
-            var contents = ServerStorage.GetDocumentContent(message.Document?.FullPath).ToArray();
-            _followUpMessage.FollowUpText = baseMessage.Reply(message.Reply().AsJson()).AsJson();
-            _followUpMessage.FollowUpContent = contents;
-            Console.WriteLine($"({baseMessage.SessionId}): sending {contents.Length} bytes");
+            if (ServerStorage.IsAvailable(message.Document?.Name ?? ""))
+            {
+                var contents = ServerStorage.GetDocumentContent(message.Document?.FullPath).ToArray();
+                _followUpMessage.FollowUpText = baseMessage.Reply(message.Reply().AsJson()).AsJson();
+                _followUpMessage.FollowUpContent = contents;
+                Console.WriteLine($"({baseMessage.SessionId}): sending {contents.Length} bytes");
+            }
+            else
+            {
+                var returnMessage = $"({baseMessage.SessionId}): {message.Document?.Name} is not available";
+                var simpleMessage = new SimpleMessage
+                {
+                    TextMessage = returnMessage
+                };
+                _followUpMessage.FollowUpText = baseMessage.Reply(simpleMessage.AsJson(), MessageType.SIMPLE).AsJson();
+                Console.WriteLine(returnMessage);
+            }
             return ProcessMessageStatus.Processed;
         }
         return ProcessMessageStatus.Error;

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using dfs.core.common.dispatcher;
 using dfs.core.common.helpers;
 using dfs.core.common.models;
 using NetCoreServer;
@@ -11,7 +12,7 @@ public abstract class BaseTcpClient : TcpClient
 {
     protected bool _stop;
     public Guid _sessionId;
-
+    protected IMessageProcessor? _currentMessageProcessor;
     protected BaseTcpClient(IPAddress address, int port) : base(address, port)
     {
     }
@@ -20,6 +21,7 @@ public abstract class BaseTcpClient : TcpClient
         var message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
         if (message.IsJson())
         {
+            _currentMessageProcessor = null;
             var baseMessage = JsonSerializer.Deserialize<BaseMessage>(message);
             if (baseMessage != null)
             {

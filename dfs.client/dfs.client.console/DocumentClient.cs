@@ -10,7 +10,6 @@ namespace dfs.client.console;
 public class DocumentClient : BaseTcpClient
 {
     private readonly MessageProvider _messageProvider;
-    private IMessageProcessor? _currentMessageProcessor;
     public DocumentClient(IPAddress address, int port, MessageProvider messageProvider) : base(address, port)
     {
         _messageProvider = messageProvider;
@@ -23,17 +22,16 @@ public class DocumentClient : BaseTcpClient
         if (result == ProcessMessageStatus.Processed)
         {
             var followUpMessage = _currentMessageProcessor?.FollowUpMessage();
-            if (followUpMessage != null)
+            if (followUpMessage != null && !string.IsNullOrEmpty(followUpMessage.FollowUpText))
             {
                 SendAsync(followUpMessage.FollowUpText);
-                Console.WriteLine($"({baseMessage.SessionId}): processed - {baseMessage.MessageType}");
             }
         }
-        else if (result == ProcessMessageStatus.Error)
+        else if (result == ProcessMessageStatus.Error || result == ProcessMessageStatus.Reset)
         {
             GetDocuments();
         }
-        else if(result == ProcessMessageStatus.Stop)
+        else if (result == ProcessMessageStatus.Stop)
         {
             End();
         }

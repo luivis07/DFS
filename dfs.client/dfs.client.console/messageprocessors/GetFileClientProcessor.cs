@@ -11,11 +11,11 @@ public class GetFileClientProcessor : IMessageProcessor
     private readonly ClientSettings _clientSettings;
     private byte[] _contents { get; set; } = new byte[0];
     private Document _currentDocument = new Document();
+    private FollowUpMessage _followUpMessage { get; set; } = new FollowUpMessage();
     public GetFileClientProcessor()
     {
         _clientSettings = SettingsReader.GetSettings().Client;
     }
-    private string? _followUpMessage { get; set; }
     public bool AppliesTo(BaseMessage baseMessage, Type sender)
     {
         return string.Equals(baseMessage.MessageType, MessageType.GET_FILE, StringComparison.OrdinalIgnoreCase) &&
@@ -24,11 +24,12 @@ public class GetFileClientProcessor : IMessageProcessor
 
     public FollowUpMessage FollowUpMessage()
     {
-        return new FollowUpMessage { FollowUpText = _followUpMessage };
+        return _followUpMessage;
     }
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
     {
+        _followUpMessage = new FollowUpMessage();
         var message = JsonSerializer.Deserialize<GetFileMessage>(baseMessage.Payload);
         if (message != null && message.Document != null)
         {

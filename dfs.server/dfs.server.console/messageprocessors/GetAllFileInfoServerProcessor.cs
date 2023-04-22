@@ -4,7 +4,7 @@ using dfs.server.console;
 
 public class GetAllFileInfoServerProcessor : IMessageProcessor
 {
-    private string? _followUpMessage { get; set; }
+    private FollowUpMessage _followUpMessage { get; set; } = new FollowUpMessage();
     public bool AppliesTo(BaseMessage baseMessage, Type sender)
     {
         return string.Equals(baseMessage.MessageType, MessageType.GET_ALL_FILEINFO, StringComparison.OrdinalIgnoreCase) &&
@@ -13,16 +13,17 @@ public class GetAllFileInfoServerProcessor : IMessageProcessor
 
     public FollowUpMessage FollowUpMessage()
     {
-        return new FollowUpMessage { FollowUpText = _followUpMessage };
+        return _followUpMessage;
     }
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
     {
+        _followUpMessage = new FollowUpMessage();
         var getAllFileInfoMessage = new GetAllFileInfoMessage
         {
             Documents = ServerStorage.GetDocuments()
         };
-        _followUpMessage = baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson();
+        _followUpMessage.FollowUpText = baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson();
         return ProcessMessageStatus.Processed;
     }
 

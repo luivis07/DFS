@@ -6,7 +6,7 @@ namespace dfs.client.console.messageprocessors;
 
 public class GetAllFileInfoClientProcessor : IMessageProcessor
 {
-    private string? _followUpMessage { get; set; }
+    private FollowUpMessage _followUpMessage { get; set; } = new FollowUpMessage();
     public bool AppliesTo(BaseMessage baseMessage, Type sender)
     {
         return string.Equals(baseMessage.MessageType, MessageType.GET_ALL_FILEINFO, StringComparison.OrdinalIgnoreCase) &&
@@ -15,6 +15,7 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
     {
+        _followUpMessage = new FollowUpMessage();
         var message = JsonSerializer.Deserialize<GetAllFileInfoMessage>(baseMessage.Payload);
         if (message != null)
         {
@@ -26,7 +27,7 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
                     Document = selection
                 };
                 Console.WriteLine($"({baseMessage.SessionId}): requested {selection.Name}");
-                _followUpMessage = baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson();
+                _followUpMessage.FollowUpText = baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson();
                 Console.WriteLine($"({baseMessage.SessionId}): request sent");
                 return ProcessMessageStatus.Processed;
             }
@@ -40,7 +41,7 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
 
     public FollowUpMessage FollowUpMessage()
     {
-        return new FollowUpMessage { FollowUpText = _followUpMessage };
+        return _followUpMessage;
     }
 
     public ProcessMessageStatus ProcessMessage(byte[] buffer)
