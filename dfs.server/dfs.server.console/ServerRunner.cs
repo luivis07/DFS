@@ -27,6 +27,8 @@ public class ServerRunner
         }
 
         Console.Write("Server stopping...");
+        Console.Write("Clearing cache...");
+        CacheStorage.ClearCache();
         _documentServer.Stop();
         Console.WriteLine("Done!");
     }

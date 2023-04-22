@@ -22,4 +22,10 @@ public static class PathProvider
             Path.Combine(GetSolutionBasePath(), settings.Client.Path) :
             Path.Combine(GetSolutionBasePath(), settings.Client.Path, clientSpecific);
     }
+
+    public static string GetCacheBasePath()
+    {
+        var settings = SettingsReader.GetSettings();
+        return Path.Combine(GetSolutionBasePath(), settings.Cache.Path);
+    }
 }

@@ -23,20 +23,30 @@ public class GetFileServerProcessor : IMessageProcessor
     {
         _followUpMessage = new FollowUpMessage();
         var message = JsonSerializer.Deserialize<GetFileMessage>(baseMessage.Payload);
-        if (message != null)
+        if (message != null && message.Document != null)
         {
-            Console.WriteLine($"({baseMessage.SessionId}): received request for {message.Document?.Name}");
-            if (ServerStorage.IsAvailable(message.Document?.Name ?? ""))
+            Console.WriteLine($"({baseMessage.SessionId}): received request for {message.Document.Name}");
+            if (ServerStorage.IsAvailable(message.Document.Name))
             {
-                var contents = ServerStorage.GetDocumentContent(message.Document?.FullPath).ToArray();
+                var contents = ServerStorage.GetDocumentContent(message.Document.FullPath).ToArray();
                 _followUpMessage.FollowUpText = baseMessage.Reply(message.Reply().AsJson()).AsJson();
                 _followUpMessage.FollowUpContent = contents;
-                ServerStorage.DecreaseQuantity(message.Document?.Name ?? "");
+                ServerStorage.DecreaseQuantity(message.Document.Name);
                 Console.WriteLine($"({baseMessage.SessionId}): sending {contents.Length} bytes");
+                if (!CacheStorage.Exists(message.Document.Name))
+                {
+                    var result = CacheStorage.Add(message.Document, contents);
+                    if (result)
+                        Console.WriteLine($"({baseMessage.SessionId}): added {contents.Length} to cache");
+                    else
+                        Console.WriteLine($"({baseMessage.SessionId}): unable to add {contents.Length} to cache");
+
+                    Console.WriteLine($"({baseMessage.SessionId}): cache usage {CacheStorage.UsedSpace}/{CacheStorage.TotalSpace}");
+                }
             }
             else
             {
-                var returnMessage = $"({baseMessage.SessionId}): {message.Document?.Name} is not available";
+                var returnMessage = $"({baseMessage.SessionId}): {message.Document.Name} is not available";
                 var simpleMessage = new SimpleMessage
                 {
                     TextMessage = returnMessage
