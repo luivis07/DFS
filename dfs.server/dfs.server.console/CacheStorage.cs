@@ -50,4 +50,15 @@ public static class CacheStorage
             f.Delete();
         }
     }
+
+    public static byte[] GetDocumentContent(string name)
+    {
+        if (Exists(name))
+        {
+            var document = _documents.First(d => string.Equals(d.Name, name, StringComparison.OrdinalIgnoreCase));
+            var bytes = File.ReadAllBytes(document.FullPath);
+            return bytes;
+        }
+        return new byte[0];
+    }
 }

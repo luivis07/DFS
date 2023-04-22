@@ -28,12 +28,14 @@ public class GetFileServerProcessor : IMessageProcessor
             Console.WriteLine($"({baseMessage.SessionId}): received request for {message.Document.Name}");
             if (ServerStorage.IsAvailable(message.Document.Name))
             {
-                var contents = ServerStorage.GetDocumentContent(message.Document.FullPath).ToArray();
+                var isInCache = CacheStorage.Exists(message.Document.Name);
+                var contents = isInCache ? CacheStorage.GetDocumentContent(message.Document.Name) :
+                                             ServerStorage.GetDocumentContent(message.Document.FullPath).ToArray();
                 _followUpMessage.FollowUpText = baseMessage.Reply(message.Reply().AsJson()).AsJson();
                 _followUpMessage.FollowUpContent = contents;
                 ServerStorage.DecreaseQuantity(message.Document.Name);
                 Console.WriteLine($"({baseMessage.SessionId}): sending {contents.Length} bytes");
-                if (!CacheStorage.Exists(message.Document.Name))
+                if (!isInCache)
                 {
                     var result = CacheStorage.Add(message.Document, contents);
                     if (result)

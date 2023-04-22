@@ -30,7 +30,7 @@ public class GetAllFileInfoServerProcessor : IMessageProcessor
         }
         var getAllFileInfoMessage = new GetAllFileInfoMessage
         {
-            Documents = documents
+            Documents = result
         };
         _followUpMessage.FollowUpText = baseMessage.Reply(getAllFileInfoMessage.AsJson()).AsJson();
         return ProcessMessageStatus.Processed;
