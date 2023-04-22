@@ -50,7 +50,7 @@ public static class ServerStorage
     {
         var doc = Documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
         if (doc != null)
-            doc.Cost--;
+            doc.QuantityAvailable--;
     }
     public static bool IsAvailable(string name)
     {

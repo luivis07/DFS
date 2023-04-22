@@ -31,6 +31,7 @@ public class GetFileServerProcessor : IMessageProcessor
                 var contents = ServerStorage.GetDocumentContent(message.Document?.FullPath).ToArray();
                 _followUpMessage.FollowUpText = baseMessage.Reply(message.Reply().AsJson()).AsJson();
                 _followUpMessage.FollowUpContent = contents;
+                ServerStorage.DecreaseQuantity(message.Document?.Name ?? "");
                 Console.WriteLine($"({baseMessage.SessionId}): sending {contents.Length} bytes");
             }
             else
