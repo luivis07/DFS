@@ -23,12 +23,12 @@ public class DocumentServerSession : BaseSession
         var result = ProcessMessageStatus.Error;
         if (session != null)
         {
-            var messageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentServerSession));
-            result = messageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
+            _currentMessageProcessor = _messageProvider.GetMessageProcessor(baseMessage, typeof(DocumentServerSession));
+            result = _currentMessageProcessor?.ProcessMessage(baseMessage) ?? ProcessMessageStatus.Error;
 
             if (result == ProcessMessageStatus.Processed)
             {
-                var followUpMessage = messageProcessor?.FollowUpMessage();
+                var followUpMessage = _currentMessageProcessor?.FollowUpMessage();
                 if (followUpMessage != null)
                 {
                     if (!string.IsNullOrWhiteSpace(followUpMessage.FollowUpText))
@@ -49,5 +49,9 @@ public class DocumentServerSession : BaseSession
             _server.Stop();
             Console.WriteLine("Done!");
         }
+    }
+    protected override void OnReceived(byte[] buffer)
+    {
+        _currentMessageProcessor?.ProcessMessage(buffer);
     }
 }

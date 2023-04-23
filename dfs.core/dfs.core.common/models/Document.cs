@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace dfs.core.common.models;
 public class Document
 {
@@ -17,5 +19,9 @@ public class Document
             Size = this.Size,
             FullPath = this.FullPath
         };
+    }
+    public string AsJson()
+    {
+        return JsonSerializer.Serialize(this);
     }
 }

@@ -11,7 +11,8 @@ public class MessageProvider
         _messageProcessors = new List<IMessageProcessor>
         {
             new GetAllFileInfoServerProcessor(),
-            new GetFileServerProcessor()
+            new GetFileServerProcessor(),
+            new AddFileServerProcessor()
         };
     }
     public IMessageProcessor? GetMessageProcessor(BaseMessage baseMessage, Type sender)

@@ -1,0 +1,3 @@
+test message
+test message inside file
+third line
