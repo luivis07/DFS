@@ -31,6 +31,6 @@ public static class PathProvider
 
     public static string GetDatastoreBackupPath()
     {
-        return Path.Combine(GetDatastoreBasePath(), "backup");
+        return Path.Combine(GetDatastoreBasePath(), "filesbackup");
     }
 }
