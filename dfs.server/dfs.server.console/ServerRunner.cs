@@ -1,4 +1,5 @@
 using System.Net;
+using dfs.cache.console;
 using dfs.core.common.settings;
 
 namespace dfs.server.console;

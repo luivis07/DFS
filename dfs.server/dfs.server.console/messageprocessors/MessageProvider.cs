@@ -12,7 +12,8 @@ public class MessageProvider
         {
             new GetAllFileInfoServerProcessor(),
             new GetFileServerProcessor(),
-            new AddFileServerProcessor()
+            new AddFileServerProcessor(),
+            new AdminRemoveDocument()
         };
     }
     public IMessageProcessor? GetMessageProcessor(BaseMessage baseMessage, Type sender)

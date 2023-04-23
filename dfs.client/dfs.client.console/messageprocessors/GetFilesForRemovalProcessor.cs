@@ -4,13 +4,13 @@ using dfs.core.common.models;
 
 namespace dfs.client.console.messageprocessors;
 
-public class GetAllFileInfoClientProcessor : IMessageProcessor
+public class GetFilesForRemovalProcessor : IMessageProcessor
 {
     private FollowUpMessage _followUpMessage { get; set; } = new FollowUpMessage();
     public bool AppliesTo(BaseMessage baseMessage, Type sender)
     {
         return string.Equals(baseMessage.MessageType, MessageType.GET_ALL_FILEINFO, StringComparison.OrdinalIgnoreCase) &&
-            (sender == typeof(DocumentClient));
+            sender == typeof(AdminDocumentClient);
     }
 
     public ProcessMessageStatus ProcessMessage(BaseMessage baseMessage)
@@ -26,8 +26,8 @@ public class GetAllFileInfoClientProcessor : IMessageProcessor
                 {
                     Document = selection
                 };
-                Console.WriteLine($"({baseMessage.SessionId}): requested {selection.Name}");
-                _followUpMessage.FollowUpText = baseMessage.Reply(fileMessage.AsJson(), MessageType.GET_FILE).AsJson();
+                Console.WriteLine($"({baseMessage.SessionId}): remove {selection.Name}");
+                _followUpMessage.FollowUpText = baseMessage.Reply(fileMessage.AsJson(), MessageType.ADMIN_REMOVE_DOCUMENT).AsJson();
                 Console.WriteLine($"({baseMessage.SessionId}): request sent");
                 return ProcessMessageStatus.Processed;
             }

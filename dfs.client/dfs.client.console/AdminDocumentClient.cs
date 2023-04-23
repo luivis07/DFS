@@ -28,6 +28,10 @@ public class AdminDocumentClient : BaseTcpClient
             {
                 SendAsync(followUpMessage.FollowUpText);
             }
+            if(baseMessage.MessageType == MessageType.GET_ALL_FILEINFO)
+            {
+                PresentPrompt();
+            }
         }
         else if (result == ProcessMessageStatus.Error || result == ProcessMessageStatus.Reset)
         {
@@ -61,6 +65,15 @@ public class AdminDocumentClient : BaseTcpClient
             SendAsync(reply.AsJson());
             SendAsync(followUpMessage.GetFollowUpContent());
             DisplayPrompt = true;
+        }
+        else
+        {
+            var reply = new BaseMessage
+            {
+                SessionId = _sessionId,
+                MessageType = followUpMessage.GetMessageType()
+            };
+            SendAsync(reply.AsJson());
         }
     }
 

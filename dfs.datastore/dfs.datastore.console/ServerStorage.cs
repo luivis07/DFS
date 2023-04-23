@@ -1,9 +1,8 @@
 using System.Net;
 using dfs.core.common.models;
 using dfs.core.common.settings;
-using dfs.datastore.console;
 
-namespace dfs.server.console;
+namespace dfs.datastore.console;
 public static class ServerStorage
 {
     private static readonly DatastoreServer _datastoreServer;
@@ -13,15 +12,16 @@ public static class ServerStorage
     {
         _datastoreServer = new DatastoreServer(IPAddress.Any, 0);
         _serverSettings = SettingsReader.GetSettings().Server;
+        _documents = new List<Document>();
         Init();
     }
-    private static IEnumerable<Document> Documents { get; set; } = Enumerable.Empty<Document>();
+    private static ICollection<Document> _documents { get; set; }
     public static void SetFileInfo(GetAllFileInfoMessage? getAllFileInfoMessage)
     {
         if (getAllFileInfoMessage != null)
-            Documents = getAllFileInfoMessage.Documents.Select(d => d).ToList();
+            _documents = getAllFileInfoMessage.Documents.Select(d => d).ToList();
     }
-    public static IEnumerable<Document> GetDocuments() => Documents.Select(d => d).ToList();
+    public static IEnumerable<Document> GetDocuments() => _documents.Select(d => d).ToList();
     public static void Init()
     {
         var documents = _datastoreServer.GetFileInfo();
@@ -34,7 +34,7 @@ public static class ServerStorage
                 document.QuantityAvailable = temp.Quantity;
             }
         }
-        Documents = documents;
+        _documents = documents.ToList();
     }
 
     public static IEnumerable<byte> GetDocumentContent(string? fullPath)
@@ -48,15 +48,34 @@ public static class ServerStorage
 
     public static void DecreaseQuantity(string name)
     {
-        var doc = Documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
+        var doc = _documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
         if (doc != null)
             doc.QuantityAvailable--;
     }
     public static bool IsAvailable(string name)
     {
-        var doc = Documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
+        var doc = _documents.FirstOrDefault(d => string.Equals(name, d.Name, StringComparison.OrdinalIgnoreCase));
         if (doc == null)
             return false;
         return doc.QuantityAvailable > 0;
+    }
+
+    public static bool AddDocument(Document document)
+    {
+        if (!_documents.Any(d => string.Equals(d.Name, document.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            _documents.Add(document);
+            return true;
+        }
+        return false;
+    }
+    public static bool RemoveDocument(string name)
+    {
+        var document = _documents.FirstOrDefault(d => string.Equals(d.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (document == null)
+            return false;
+        _documents.Remove(document);
+        File.Delete(document.FullPath);
+        return true;
     }
 }

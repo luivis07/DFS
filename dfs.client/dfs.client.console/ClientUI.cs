@@ -29,14 +29,21 @@ public static class ClientUI
         }
         if (string.Equals(choice, MessageType.ADMIN_REMOVE_DOCUMENT_SELECTION, StringComparison.OrdinalIgnoreCase))
         {
-            return RemoveAdminDocument();
+            return GetDocuments();
         }
         return null;
     }
 
+    private static IAdminMessage GetDocuments()
+    {
+        var result = new GetAllFileInfoMessage();
+        return result;
+    }
+
     private static IAdminMessage RemoveAdminDocument()
     {
-        throw new NotImplementedException();
+        var result = new ProcessAdminRemoveDocument();
+        return result;
     }
 
     private static IAdminMessage AddAdminDocument()

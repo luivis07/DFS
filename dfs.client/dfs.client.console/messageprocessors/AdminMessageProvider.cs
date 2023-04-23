@@ -10,6 +10,7 @@ public class AdminMessageProvider
     {
         _messageProcessors = new List<IMessageProcessor>
         {
+            new GetFilesForRemovalProcessor()
         };
     }
     public IMessageProcessor? GetMessageProcessor(BaseMessage baseMessage, Type sender)

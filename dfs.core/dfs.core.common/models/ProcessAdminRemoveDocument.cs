@@ -4,7 +4,7 @@ namespace dfs.core.common.models;
 
 public class ProcessAdminRemoveDocument : IAdminMessage
 {
-    public Document? Document { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public Document? Document { get; set; }
 
     public byte[]? GetFollowUpContent()
     {

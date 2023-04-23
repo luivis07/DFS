@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\dfs.core\dfs.core.common\dfs.core.common.csproj" />
     <ProjectReference Include="..\..\dfs.datastore\dfs.datastore.console\dfs.datastore.console.csproj" />
+    <ProjectReference Include="..\..\dfs.cache\dfs.cache.console\dfs.cache.console.csproj" />
   </ItemGroup>
 
 </Project>

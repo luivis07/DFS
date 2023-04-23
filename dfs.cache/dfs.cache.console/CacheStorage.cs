@@ -2,8 +2,7 @@ using dfs.core.common.helpers;
 using dfs.core.common.models;
 using dfs.core.common.settings;
 
-namespace dfs.server.console;
-
+namespace dfs.cache.console;
 public static class CacheStorage
 {
     private static ICollection<Document> _documents { get; set; }
@@ -60,5 +59,15 @@ public static class CacheStorage
             return bytes;
         }
         return new byte[0];
+    }
+
+    public static void RemoveDocument(string name)
+    {
+        var document = _documents.FirstOrDefault(d => string.Equals(d.Name, name, StringComparison.OrdinalIgnoreCase));
+        if (document == null)
+            return;
+
+        _documents.Remove(document);
+        File.Delete(document.FullPath);
     }
 }
