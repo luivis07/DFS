@@ -10,6 +10,8 @@ public class AdminDocumentClient : BaseTcpClient
 {
     private readonly AdminMessageProvider _adminMessageProvider;
 
+    public bool DisplayPrompt = false;
+
     public AdminDocumentClient(IPAddress address, int port, AdminMessageProvider adminMessageProvider) : base(address, port)
     {
         _adminMessageProvider = adminMessageProvider;
@@ -26,11 +28,10 @@ public class AdminDocumentClient : BaseTcpClient
             {
                 SendAsync(followUpMessage.FollowUpText);
             }
-            PresentPrompt(baseMessage);
         }
         else if (result == ProcessMessageStatus.Error || result == ProcessMessageStatus.Reset)
         {
-            PresentPrompt(baseMessage);
+            PresentPrompt();
         }
         else if (result == ProcessMessageStatus.Stop)
         {
@@ -38,19 +39,28 @@ public class AdminDocumentClient : BaseTcpClient
         }
     }
 
-    private void PresentPrompt(BaseMessage baseMessage)
+    public void PresentPrompt()
     {
+        DisplayPrompt = false;
         var followUpMessage = ClientUI.DisplayOptions();
-        while (followUpMessage == null)
+        if (followUpMessage == null)
         {
-            Console.WriteLine("Choose a valid option");
-            followUpMessage = ClientUI.DisplayOptions();
+            Console.Write("Client disconnecting...");
+            DisconnectAndStop();
+            Console.WriteLine("Done!");
+            return;
         }
-        if (followUpMessage.Document != null && followUpMessage.GetFollowUpContent() != null)
+        else if (followUpMessage.Document != null && followUpMessage.GetFollowUpContent() != null)
         {
-            var reply = baseMessage.Reply(followUpMessage.Document.AsJson(), followUpMessage.GetMessageType()).AsJson();
-            SendAsync(reply);
+            var reply = new BaseMessage
+            {
+                SessionId = _sessionId,
+                Payload = followUpMessage.Document.AsJson(),
+                MessageType = followUpMessage.GetMessageType()
+            };
+            SendAsync(reply.AsJson());
             SendAsync(followUpMessage.GetFollowUpContent());
+            DisplayPrompt = true;
         }
     }
 

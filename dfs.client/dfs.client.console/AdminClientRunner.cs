@@ -27,6 +27,10 @@ public class AdminClientRunner
         Console.WriteLine($"({_client._sessionId}): session established");
         while (_client.IsConnected)
         {
+            if(_client.DisplayPrompt)
+            {
+                _client.PresentPrompt();
+            }
         }
     }
 }
