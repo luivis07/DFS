@@ -1,4 +1,5 @@
 using System.Net;
+using dfs.core.common.helpers;
 using dfs.core.common.models;
 using dfs.core.common.settings;
 
@@ -7,11 +8,13 @@ public static class ServerStorage
 {
     private static readonly DatastoreServer _datastoreServer;
     private static readonly ServerSettings _serverSettings;
+    private static readonly DatastoreSettings _datastoreSettings;
 
     static ServerStorage()
     {
         _datastoreServer = new DatastoreServer(IPAddress.Any, 0);
         _serverSettings = SettingsReader.GetSettings().Server;
+        _datastoreSettings = SettingsReader.GetSettings().Datastore;
         _documents = new List<Document>();
         Init();
     }
@@ -24,6 +27,19 @@ public static class ServerStorage
     public static IEnumerable<Document> GetDocuments() => _documents.Select(d => d).ToList();
     public static void Init()
     {
+        var datastoreDirectory = new DirectoryInfo(_datastoreSettings.Path);
+        foreach (var f in datastoreDirectory.GetFiles())
+        {
+            f.Delete();
+        }
+        var backupDirectory = PathProvider.GetDatastoreBackupPath();
+        var filePaths = Directory.GetFiles(backupDirectory);
+        foreach (var fileName in filePaths)
+        {
+            var fi = new FileInfo(fileName);
+            File.Copy(fileName, Path.Combine(PathProvider.GetDatastoreBasePath(), fi.Name));
+        }
+
         var documents = _datastoreServer.GetFileInfo();
         foreach (var document in documents)
         {
@@ -60,11 +76,12 @@ public static class ServerStorage
         return doc.QuantityAvailable > 0;
     }
 
-    public static bool AddDocument(Document document)
+    public static bool AddDocument(Document document, byte[] contents)
     {
         if (!_documents.Any(d => string.Equals(d.Name, document.Name, StringComparison.OrdinalIgnoreCase)))
         {
             _documents.Add(document);
+            File.WriteAllBytes(document.FullPath, contents);
             return true;
         }
         return false;

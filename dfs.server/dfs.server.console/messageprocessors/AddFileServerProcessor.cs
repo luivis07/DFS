@@ -2,6 +2,7 @@ using System.Text.Json;
 using dfs.core.common.dispatcher;
 using dfs.core.common.helpers;
 using dfs.core.common.models;
+using dfs.datastore.console;
 
 namespace dfs.server.console.messageprocessors;
 
@@ -43,13 +44,13 @@ public class AddFileServerProcessor : IMessageProcessor
         _contents = Combine(_contents, buffer);
         if (_contents.Length == _currentDocument.Size)
         {
-            File.WriteAllBytes(_currentDocument.FullPath, _contents.ToArray());
+            ServerStorage.AddDocument(_currentDocument.Copy(), _contents.ToArray());
             _contents = new byte[0];
             _currentDocument = new Document();
             return ProcessMessageStatus.Processed;
         }
         return ProcessMessageStatus.Processing;
-        
+
     }
     public static byte[] Combine(byte[] first, byte[] second)
     {

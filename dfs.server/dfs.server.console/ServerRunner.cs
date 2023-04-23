@@ -1,6 +1,7 @@
 using System.Net;
 using dfs.cache.console;
 using dfs.core.common.settings;
+using dfs.datastore.console;
 
 namespace dfs.server.console;
 
@@ -13,6 +14,7 @@ public class ServerRunner
     {
         _server = SettingsReader.GetSettings().Server;
         _documentServer = new DocumentServer(IPAddress.Any, _server.Port);
+        ServerStorage.Init();
     }
     public void Begin()
     {

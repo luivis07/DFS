@@ -28,4 +28,9 @@ public static class PathProvider
         var settings = SettingsReader.GetSettings();
         return Path.Combine(GetSolutionBasePath(), settings.Cache.Path);
     }
+
+    public static string GetDatastoreBackupPath()
+    {
+        return Path.Combine(GetDatastoreBasePath(), "backup");
+    }
 }
