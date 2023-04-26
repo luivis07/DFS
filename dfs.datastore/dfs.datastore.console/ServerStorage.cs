@@ -27,7 +27,7 @@ public static class ServerStorage
     public static IEnumerable<Document> GetDocuments() => _documents.Select(d => d).ToList();
     public static void Init()
     {
-        var datastoreDirectory = new DirectoryInfo(_datastoreSettings.Path);
+        var datastoreDirectory = new DirectoryInfo(PathProvider.GetDatastoreBasePath());
         foreach (var f in datastoreDirectory.GetFiles())
         {
             f.Delete();

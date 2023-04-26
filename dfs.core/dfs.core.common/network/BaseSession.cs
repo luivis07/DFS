@@ -33,7 +33,9 @@ public abstract class BaseSession : TcpSession
                 if (simpleMessage != null)
                     session.SendAsync($"(admin) '{simpleMessage.TextMessage}' - received.");
             }
-            OnReceived(baseMessage);
+            baseMessage.Received = DateTime.UtcNow;
+            if (OnReceiving(baseMessage))
+                OnReceived(baseMessage);
         }
         else
         {
@@ -43,6 +45,12 @@ public abstract class BaseSession : TcpSession
         }
         base.OnReceived(buffer, offset, size);
     }
+
+    protected virtual bool OnReceiving(BaseMessage baseMessage)
+    {
+        return true;
+    }
+
     protected abstract void OnReceived(BaseMessage baseMessage);
     protected virtual void OnReceived(byte[] buffer)
     {

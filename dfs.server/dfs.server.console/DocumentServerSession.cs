@@ -2,6 +2,7 @@ using dfs.core.common.dispatcher;
 using dfs.core.common.models;
 using dfs.core.common.network;
 using dfs.server.console.messageprocessors;
+using dfs.server.console.recovery;
 using NetCoreServer;
 
 namespace dfs.server.console;
@@ -15,6 +16,11 @@ public class DocumentServerSession : BaseSession
     {
         _server = server;
         _messageProvider = messageProvider;
+    }
+
+    protected override bool OnReceiving(BaseMessage baseMessage)
+    {
+        return _server.RecoveryManager.Save(baseMessage);
     }
 
     protected override void OnReceived(BaseMessage baseMessage)

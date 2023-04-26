@@ -25,6 +25,7 @@ public class ServerSettings
     public IEnumerable<DocumentSettings> Documents { get; set; } = Enumerable.Empty<DocumentSettings>();
     public string IPAddress { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 1111;
+    public string Path { get; set; } = string.Empty;
 }
 
 public class DocumentSettings

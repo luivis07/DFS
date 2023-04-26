@@ -33,4 +33,15 @@ public static class PathProvider
     {
         return Path.Combine(GetDatastoreBasePath(), "filesbackup");
     }
+
+    public static string GetServerBasePath()
+    {
+        var settings = SettingsReader.GetSettings();
+        return Path.Combine(GetSolutionBasePath(), settings.Server.Path);
+    }
+
+    public static string GetStableStoragePath()
+    {
+        return Path.Combine(GetServerBasePath(), "stablestorage");
+    }
 }

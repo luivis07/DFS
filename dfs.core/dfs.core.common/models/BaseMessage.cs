@@ -7,6 +7,8 @@ public class BaseMessage
     public string MessageType { get; set; } = "Simple";
     public Guid SessionId { get; set; }
     public string Payload { get; set; } = string.Empty;
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTime? Received { get; set; }
 
     public BaseMessage Reply(string payload, string messageType = "")
     {

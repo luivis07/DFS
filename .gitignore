@@ -477,11 +477,12 @@ $RECYCLE.BIN/
 *.lnk
 
 #custom
-dfs.documents/clients*
-dfs.documents/cache*
+dfs.documents/clients/*
+dfs.documents/cache/*
 dfs.documents/datastore/A.txt
 dfs.documents/datastore/B.txt
 dfs.documents/datastore/C.txt
 dfs.documents/datastore/D.txt
 dfs.documents/datastore/E.txt
 dfs.documents/datastore/F.txt
+dfs.documents/server/stablestorage/*
