@@ -20,4 +20,13 @@ public class RecoveryManager
             return false;
         }
     }
+    public BaseMessage? GetRecoveryCheckpoint()
+    {
+        var directory = new DirectoryInfo(PathProvider.GetStableStoragePath());
+        var mostRecent = directory.GetFiles("*.json").OrderByDescending(f => f.LastWriteTimeUtc).FirstOrDefault();
+        if (mostRecent == null)
+            return null;
+        var baseMessage = File.ReadAllText(mostRecent.FullName);
+        return JsonSerializer.Deserialize<BaseMessage>(baseMessage);
+    }
 }
